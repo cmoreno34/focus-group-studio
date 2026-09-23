@@ -107,9 +107,9 @@ pre.prompt{background:#14211b;color:#e8efe6;border-radius:10px;padding:14px;marg
 
 <details class="org">
   <summary>▸ Professor: organise the room — paste the class list, make the groups</summary>
-  <p class="hint" style="color:var(--soft)">~20 students → at least 6 recorded groups in an hour: two rounds of three groups, reshuffled, so everyone takes part twice and roles rotate. Paste one name per line.</p>
-  <label class="fl" for="names">Class list (one name per line)</label>
-  <textarea id="names" class="capped" style="height:120px;max-height:220px" placeholder="Ana García&#10;Marc Puig&#10;…"></textarea>
+  <p class="hint" style="color:var(--soft)">~20 students → at least 6 recorded groups in an hour: two rounds of three groups, reshuffled, so everyone takes part twice and roles rotate. Paste one name per line, or paste the Blackboard roster straight — it keeps only the students and drops the professor and the links.</p>
+  <label class="fl" for="names">Class list — one name per line, or paste the Blackboard roster</label>
+  <textarea id="names" class="capped" style="height:120px;max-height:220px" placeholder="Ana García&#10;Marc Puig&#10;…&#10;&#10;— or paste the Blackboard roster, e.g. —&#10;* [Juan Blanco Gutierrez](https://…)&#10;Estudiante&#10;* [Milan Bogenfürst](https://…)&#10;Estudiante"></textarea>
   <div class="row">
     <label class="fl" style="margin:0">Rounds <input class="txt num" id="rounds" type="number" value="2" min="1" max="4"></label>
     <label class="fl" style="margin:0">Groups / round <input class="txt num" id="gpr" type="number" value="3" min="2" max="6"></label>
@@ -206,8 +206,26 @@ function refreshCount(){const n=nLines();$('#count').textContent=n?`${n} lines p
 
 /* group organiser */
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+function parseNames(raw){
+  // Accepts a plain "one name per line" list OR a pasted Blackboard roster
+  // (markdown links + "Estudiante"/"Profesor" role lines). Keeps only students.
+  const hasStructure=/\]\(|estudiante|profesor/i.test(raw);
+  if(!hasStructure) return raw.split('\n').map(s=>s.trim()).filter(Boolean);
+  const lines=raw.split('\n'); const out=[]; let pending=null;
+  for(const ln of lines){
+    const s=ln.trim(); if(!s)continue;
+    const m=s.match(/\[([^\]]+)\]\([^)]*\)/);          // * [Name](url)
+    if(m){pending=m[1].trim();continue;}
+    if(/^profesor/i.test(s)){pending=null;continue;}   // drop the professor
+    if(/^estudiante/i.test(s)){if(pending){out.push(pending);pending=null;}continue;}
+  }
+  if(!out.length){ // roster had links but no role lines → take all names except a professor
+    out.push(...[...raw.matchAll(/\[([^\]]+)\]\([^)]*\)/g)].map(x=>x[1].trim()).filter(n=>!/profesor/i.test(n)));
+  }
+  return out;
+}
 $('#makeGroups').onclick=()=>{
-  const names=$('#names').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const names=parseNames($('#names').value);
   const R=Math.max(1,Math.min(4,parseInt($('#rounds').value)||2));
   const G=Math.max(2,Math.min(6,parseInt($('#gpr').value)||3));
   const out=$('#roster');
