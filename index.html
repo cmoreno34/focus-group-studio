@@ -1,0 +1,283 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Focus group studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Archivo:wght@400;500;600;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+:root{
+  --ground:#f4f2ea;--panel:#fbfaf5;--ink:#17251d;--soft:#4a5a50;--leaf:#2f6b4f;--leaf-ink:#21503b;
+  --clay:#bd5f3f;--line:#ddd8c9;--sage:#e7ece3;--chip:#eef1e8;--shadow:0 1px 2px rgba(23,37,29,.06),0 8px 24px rgba(23,37,29,.06);
+  --c1:#3b6fb5;--c2:#2f8f8f;--c3:#c9702f;--c4:#7a6bd0;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#111713;--panel:#18211b;--ink:#eef1ea;--soft:#a7b7ac;--leaf:#6bbd93;--leaf-ink:#8fd3ac;
+  --clay:#e08a68;--line:#2a352d;--sage:#1e2922;--chip:#212c25;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);
+  --c1:#6ea8e6;--c2:#63c6c6;--c3:#e0a44f;--c4:#b0a6d6;}}
+:root[data-theme="dark"]{
+  --ground:#111713;--panel:#18211b;--ink:#eef1ea;--soft:#a7b7ac;--leaf:#6bbd93;--leaf-ink:#8fd3ac;
+  --clay:#e08a68;--line:#2a352d;--sage:#1e2922;--chip:#212c25;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);
+  --c1:#6ea8e6;--c2:#63c6c6;--c3:#e0a44f;--c4:#b0a6d6;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:Archivo,system-ui,sans-serif;line-height:1.55;padding-inline:clamp(16px,4vw,40px)}
+.wrap{max-width:820px;margin:0 auto}
+header{padding-block:30px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.brandline{font:600 12px/1 Archivo;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);margin:0 0 8px}
+h1{font-family:Fraunces,Georgia,serif;font-weight:900;font-size:clamp(26px,5vw,36px);line-height:1.04;margin:0}
+.themebtn{background:var(--panel);border:1px solid var(--line);color:var(--soft);border-radius:999px;padding:6px 13px;font:500 13px Archivo;cursor:pointer}
+.sub{font-size:14px;color:var(--soft);margin:16px 0 4px}
+.case{background:var(--sage);border:1px solid var(--line);border-radius:14px;padding:15px 18px;margin:14px 0 6px;font-size:14.5px}
+.case b{font-weight:700}.case .q{color:var(--clay);font-weight:700}
+.who{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 4px}
+.who label{display:flex;flex-direction:column;gap:4px;font:700 10.5px Archivo;letter-spacing:.1em;text-transform:uppercase;color:var(--soft)}
+.who input{border:1px solid var(--line);border-radius:8px;padding:9px 11px;font:400 14px Archivo;background:var(--panel);color:var(--ink);min-width:200px}
+.step{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--c,var(--leaf));border-radius:12px;padding:16px 18px;margin:15px 0;box-shadow:var(--shadow)}
+.step h2{font-family:Fraunces,serif;font-weight:900;font-size:19px;margin:0 0 3px;display:flex;align-items:center;gap:10px}
+.step h2 .n{background:var(--c,var(--leaf));color:#fff;width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.step .lead{color:var(--soft);font-size:13px;margin:0 0 12px}
+label.fl{display:block;font:700 11px Archivo;letter-spacing:.06em;text-transform:uppercase;margin:6px 0 6px}
+input.txt,textarea{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--ground);color:var(--ink);padding:11px 13px;font:400 14px/1.5 Archivo;resize:none}
+textarea{overflow:hidden;min-height:60px}
+textarea.capped{overflow:auto;resize:vertical}
+input.txt:focus,textarea:focus{outline:none;border-color:var(--c,var(--leaf))}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:6px 0}
+.num{width:74px}
+.btn{background:var(--leaf);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:700 14px Archivo;cursor:pointer}
+.how{background:var(--sage);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin:4px 0 12px;font-size:13px}
+.how ol{margin:6px 0 0;padding-left:20px}.how li{margin:4px 0}.how b{color:var(--leaf-ink)}
+details.org{border:1px dashed var(--line);border-radius:10px;padding:10px 13px;margin:8px 0;background:var(--ground)}
+details.org summary{cursor:pointer;font:700 12.5px Archivo;color:var(--leaf-ink)}
+.roster{margin-top:10px}
+.round{margin:8px 0;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.round>b{color:var(--leaf-ink)}
+.grp{font-size:13px;margin:5px 0;padding:6px 8px;border-radius:8px;background:var(--ground)}
+.grp .mod{color:var(--clay);font-weight:700}
+.chip2{display:flex;align-items:center;gap:10px;justify-content:space-between;border:1px solid var(--line);background:var(--sage);border-radius:10px;padding:11px 14px;font:600 13.5px Archivo;cursor:pointer;margin:2px 0}
+.chip2 b{color:var(--leaf-ink)}.chip2 .edit{font:600 12px Archivo;color:var(--soft);white-space:nowrap}.chip2:hover{border-color:var(--leaf)}
+.copybtn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:8px 13px;font:600 12.5px Archivo;cursor:pointer;margin-bottom:10px}
+.copybtn:hover{border-color:var(--leaf)}
+pre.prompt{background:#14211b;color:#e8efe6;border-radius:10px;padding:14px;margin:0 0 10px;font:400 12px/1.6 ui-monospace,monospace;white-space:pre-wrap}
+.mapout{margin:8px 0 2px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:auto;text-align:center}
+.mapout svg{max-width:100%;height:auto}
+.mapmsg{font-size:12.5px;color:var(--soft);margin:2px 0 8px}
+.tools2{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.t2{display:flex;flex-direction:column;gap:1px;background:var(--ground);border:1px solid var(--line);border-radius:9px;padding:8px 12px;text-decoration:none;color:var(--ink);font:700 13px Archivo}
+.t2 span{font:500 10.5px Archivo;color:var(--soft)}.t2.main{background:var(--c,var(--leaf));color:#fff;border-color:transparent}.t2.main span{color:rgba(255,255,255,.82)}
+.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:22px 0 6px}
+.pdf{background:var(--clay);color:#fff;border:0;border-radius:10px;padding:13px 24px;font:700 15px Archivo;cursor:pointer}
+.ghost{background:transparent;border:1px solid var(--line);color:var(--soft);border-radius:10px;padding:12px 16px;font:600 13px Archivo;cursor:pointer}
+.saved{font-size:12px;color:var(--soft)}.hint{font-size:12.5px;color:var(--clay);margin:4px 0 0}.count{font:700 12.5px Archivo;color:var(--leaf);margin-top:6px;min-height:16px}
+.printonly{display:none}.printmirror{display:none}
+@media print{
+  header .themebtn,.tools2,.copybtn,pre.prompt,.step .lead,.bar,.how,.btn,.chip2,.count,.mapmsg,details.org{display:none!important}
+  body{background:#fff;color:#000;padding:0}.step{border:1px solid #bbb;border-left:5px solid #666;break-inside:avoid;box-shadow:none}
+  textarea,input.txt{border-color:#bbb;background:#fff;color:#000}
+  #w_tx,#w_airesult{display:none!important}
+  .printmirror{display:block;white-space:pre-wrap;word-break:break-word;font:11px/1.5 Archivo;border:1px solid #bbb;border-radius:8px;padding:10px;background:#fff;margin:2px 0 8px}
+  .printmirror:empty{display:none}.mapout{display:block!important;border:1px solid #bbb}
+  .printonly{display:block;margin-bottom:10px;border-bottom:2px solid #2f6b4f;padding-bottom:6px}
+}
+</style></head>
+<body><div class="wrap">
+<header>
+  <div><p class="brandline">Estudios de Mercado I · Tema 3 · Focus groups (3.3)</p>
+  <h1>Focus group studio</h1></div>
+  <button class="themebtn" id="theme">◐ Theme</button>
+</header>
+<div class="printonly"><div style="font:700 11px Archivo;letter-spacing:.1em;text-transform:uppercase;color:#2f6b4f">Estudios de Mercado I · Tema 3 — Focus group worksheet</div></div>
+
+<p class="sub"><b>What you do:</b> run a short focus group on ONE topic, <b>record it</b>, get the recording <b>transcribed</b>, then <b>apply thematic analysis</b> to the transcript — themes, a map, and a decision for the client. Real primary data, captured and analysed in one session.</p>
+
+<div class="case" id="topic">
+  <b>The topic — the student night out.</b> Client: a new events / nightlife app that wants to win the student segment.
+  <span class="q">Research question:</span> how do students decide where to go out — the pull of the <b>music</b>, the <b>venue</b>, the <b>people</b> and the <b>budget</b> — and what makes a night feel “worth it”?
+  The decision the client faces: what should the app offer to become students' default way to plan a night out?
+</div>
+
+<div class="how">
+  <b>Moderator's guide — a funnel, ~15–18 min (3.2 / 3.3).</b> Keep it on topic without leading it; make it safe to disagree; don't let one voice dominate.
+  <ol>
+    <li><b>Warm-up (2m):</b> “Tell us about your last good night out.” (no wrong answers)</li>
+    <li><b>Broad (4m):</b> “Walk us through a typical Thursday/Friday — how do you decide where to go, and with whom?”</li>
+    <li><b>Core (6m):</b> “What makes a place worth staying at? How much does the <b>music</b> matter vs the people vs the price? Pick between two plans out loud.”</li>
+    <li><b>Probe / ladder (3m):</b> on the top thing someone names, ask “and why does that matter to you?” two or three times.</li>
+    <li><b>Close (2m):</b> “If someone built the perfect night-out app for students, what would it do?”</li>
+  </ol>
+</div>
+
+<details class="org">
+  <summary>▸ Professor: organise the room — paste the class list, make the groups</summary>
+  <p class="hint" style="color:var(--soft)">~20 students → at least 6 recorded groups in an hour: two rounds of three groups, reshuffled, so everyone takes part twice and roles rotate. Paste one name per line.</p>
+  <label class="fl" for="names">Class list (one name per line)</label>
+  <textarea id="names" class="capped" style="height:120px;max-height:220px" placeholder="Ana García&#10;Marc Puig&#10;…"></textarea>
+  <div class="row">
+    <label class="fl" style="margin:0">Rounds <input class="txt num" id="rounds" type="number" value="2" min="1" max="4"></label>
+    <label class="fl" style="margin:0">Groups / round <input class="txt num" id="gpr" type="number" value="3" min="2" max="6"></label>
+    <button class="btn" id="makeGroups">Make the groups</button>
+  </div>
+  <div class="roster" id="roster"></div>
+</details>
+
+<div class="who">
+  <label>Name / group <input id="w_name" placeholder="Group C — moderator A. García"></label>
+  <label>Date <input id="w_date" placeholder="dd/mm/yyyy"></label>
+</div>
+
+<div class="step" style="--c:var(--c1)">
+  <h2><span class="n">1</span> Paste the transcription of your focus group</h2>
+  <p class="lead">Record on a phone, then transcribe it (phone auto-caption, Whisper, or upload the audio to NotebookLM). Paste the transcript — any length; the box collapses to a tidy line so the worksheet stays in view.</p>
+  <label class="fl" for="w_tx">Focus-group transcript</label>
+  <textarea id="w_tx" class="capped" style="height:150px;max-height:260px" placeholder="Paste the transcript. Speaker labels help (M: moderator, P1, P2…) but a rough paste is fine — the AI will sort it."></textarea>
+  <div class="chip2" id="txChip" style="display:none"><span>✓ transcript pasted — the worksheet continues below</span><span class="edit">click to view / edit</span></div>
+  <pre class="printmirror" id="txPrint"></pre>
+  <div class="count" id="count"></div>
+</div>
+
+<div class="step" style="--c:var(--c2)">
+  <h2><span class="n">2</span> Analyse it — apply the method</h2>
+  <p class="lead">You are applying <b>thematic analysis / grounded theory</b> (3.7) to the transcript: build the meaning UP from what was said.</p>
+  <div class="how">
+    <b>The method you apply to the transcript:</b>
+    <ol>
+      <li><b>Open-code</b> — tag recurring ideas in the participants' own words.</li>
+      <li><b>Categorise → themes</b> — 3–5 themes, each with two real quotes.</li>
+      <li><b>Map & verify</b> — draw the thematic map; cut any theme you can't evidence.</li>
+      <li><b>Group bias</b> — note where one voice dominated or the group agreed too fast (groupthink).</li>
+      <li><b>Decide</b> — what the client should DO.</li>
+    </ol>
+    The prompt below runs steps 1–4 as a first pass (AI = second coder). You judge, verify and decide.
+  </div>
+  <div class="tools2">
+    <a class="t2 main" href="https://chatgpt.com/g/g-MBeK0q8uJ-qualitative-research" target="_blank" rel="noopener">Qualitative GPT<span>the course assistant</span></a>
+    <a class="t2" href="https://notebooklm.google.com" target="_blank" rel="noopener">NotebookLM<span>transcribe + analyse audio</span></a>
+    <a class="t2" href="https://claude.ai" target="_blank" rel="noopener">Claude<span>long transcripts</span></a>
+  </div>
+  <button class="copybtn" id="copyprompt">copy the analysis prompt (with the transcript)</button>
+  <pre class="prompt" id="prompt"></pre>
+  <label class="fl" for="w_airesult">Paste the AI's full answer back here — including the <code>```mermaid</code> map block</label>
+  <textarea id="w_airesult" class="capped" style="height:150px;max-height:260px" placeholder="Paste everything the AI returned, including the ```mermaid ... ``` map. Then press ‘Draw the map’. It collapses once you click away."></textarea>
+  <div class="chip2" id="aiChip" style="display:none"><span>✓ AI answer pasted — map drawn below</span><span class="edit">click to view / edit</span></div>
+  <pre class="printmirror" id="aiPrint"></pre>
+  <div class="row"><button class="copybtn" id="drawmap" style="margin:0">◇ Draw the map</button></div>
+  <p class="mapmsg" id="mapmsg"></p>
+  <div class="mapout" id="mapout" style="display:none"></div>
+  <label class="fl" for="w_themes">Your read of the AI's analysis — which themes hold up, which you cut, and why</label>
+  <textarea id="w_themes" placeholder="Comment on the AI's result: Theme 1 holds — quotes “…”, “…”. Theme 2 I cut — only the loudest participant said it. Theme 3 the AI missed. (You are the analyst; the AI was the first-pass second coder.)"></textarea>
+</div>
+
+<div class="step" style="--c:var(--c3)">
+  <h2><span class="n">3</span> Group bias, then the decision <b>for the client</b></h2>
+  <p class="lead">A focus group can be dominated by one voice or slide into agreement. Name that — then say what the <b>client should DO</b>. The decision is a marketing action, not a summary.</p>
+  <label class="fl" for="w_bias">Where the group dynamic may have distorted the talk</label>
+  <textarea id="w_bias" placeholder="e.g. One participant drove the ‘music matters most’ line and others followed; the quiet two barely spoke; nobody defended expensive nights."></textarea>
+  <label class="fl" for="w_dec">The decision FOR THE CLIENT — what should the app DO? + the question a group can't answer</label>
+  <textarea id="w_dec" style="min-height:96px" placeholder="Decision (an action): e.g. “Lead the app with live music/line-ups and let friends co-plan, not with discounts.” Then the limit: “A group can't tell us how common each preference is — that needs a survey.”"></textarea>
+</div>
+
+<div class="bar">
+  <button class="pdf" id="pdf">⬇ Download PDF</button>
+  <button class="ghost" id="clear">Clear worksheet</button>
+  <span class="saved" id="saved">Saved in this browser</span>
+</div>
+<p class="hint">One focus group = one PDF. <b>Download before clearing.</b> Anonymise participants, and remember: a focus group tells you what exists and in what language, never how common it is — that is a survey's job.</p>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const KEY='mkt3600_fg';
+const TOPIC='the student night out (how students choose where to go out — music, venue, people, budget)';
+const CLIENT='a new events / nightlife app for students';
+function val(id){const e=$('#'+id);return e?e.value.trim():'';}
+function autogrow(t){t.style.height='auto';t.style.height=(t.scrollHeight+2)+'px';}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function nLines(){const c=val('w_tx');return c?c.split('\n').filter(x=>x.trim()).length:0;}
+function refreshCount(){const n=nLines();$('#count').textContent=n?`${n} lines pasted — read them, then copy the prompt below.`:'';}
+
+/* group organiser */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+$('#makeGroups').onclick=()=>{
+  const names=$('#names').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const R=Math.max(1,Math.min(4,parseInt($('#rounds').value)||2));
+  const G=Math.max(2,Math.min(6,parseInt($('#gpr').value)||3));
+  const out=$('#roster');
+  if(names.length<4){out.innerHTML='<p class="hint">Add at least 4 names.</p>';return;}
+  const moderated=new Set();let html='';let letter=0;
+  for(let r=1;r<=R;r++){
+    const sh=shuffle(names);const groups=Array.from({length:G},()=>[]);
+    sh.forEach((n,i)=>groups[i%G].push(n));
+    html+=`<div class="round"><b>Round ${r}</b> — ~20 min, record each group on a phone`;
+    groups.forEach(g=>{
+      if(!g.length)return;
+      let mod=g.find(n=>!moderated.has(n))||g[0];moderated.add(mod);
+      const rest=g.filter(n=>n!==mod);const rec=rest[0]||'—';const parts=rest.slice(1);
+      const L=String.fromCharCode(65+letter++);
+      html+=`<div class="grp"><b>Group ${L}</b> · <span class="mod">Moderator: ${esc(mod)}</span> · Recorder: ${esc(rec)} · Participants: ${parts.map(esc).join(', ')||'—'}</div>`;
+    });
+    html+='</div>';
+  }
+  html+=`<p class="hint" style="color:var(--soft)">${names.length} students · ${R*G} recordings. Everyone takes part in ${R} groups; moderators rotate. Each group saves its recording and transcribes it for the worksheet.</p>`;
+  out.innerHTML=html;
+};
+
+function buildPrompt(){
+  const tx=val('w_tx')||'[PASTE THE TRANSCRIPT FIRST]';
+  return `Act as a qualitative research analyst. This is the transcript of a short student FOCUS GROUP on ${TOPIC}. The client is ${CLIENT}.
+
+TRANSCRIPT:
+"""
+${tx}
+"""
+
+1) OPEN-CODE the transcript in the participants' own words, then group into categories.
+2) Name 3-5 THEMES, each with TWO real verbatim quotes (copy them exactly; never invent).
+3) For each theme give the non-obvious INSIGHT and its implication for the client.
+4) DRAW A THEMATIC MAP as a Mermaid mindmap (\`\`\`mermaid, type "mindmap"): topic → themes → categories → a sample quote each.
+5) GROUP BIAS: note where ONE participant dominated, where the group converged too fast (groupthink), and which views only one person held. Say which findings would NOT survive a representative survey.
+6) End with the single DECISION the client should take (a concrete marketing action), and the biggest question a focus group CANNOT answer (that needs a survey).
+Use ONLY the transcript — do not invent quotes or data; if the evidence is thin, say so.`;
+}
+function refreshPrompt(){$('#prompt').textContent=buildPrompt();}
+
+const ids=['w_name','w_date','names','rounds','gpr','w_tx','w_airesult','w_themes','w_bias','w_dec'];
+let st;
+function save(){clearTimeout(st);st=setTimeout(()=>{const o={};ids.forEach(i=>o[i]=val(i));o._roster=$('#roster').innerHTML;
+  try{localStorage.setItem(KEY,JSON.stringify(o));$('#saved').textContent='Saved ✓ '+new Date().toLocaleTimeString();}catch(_){}} ,300);}
+(function init(){let s={};try{s=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(_){}
+  ids.forEach(i=>{const el=$('#'+i);if(!el)return;el.value=s[i]||el.value;
+    const capped=el.classList.contains('capped');
+    el.addEventListener('input',()=>{if(el.tagName==='TEXTAREA'&&!capped){autogrow(el);}save();if(i==='w_tx'){refreshPrompt();refreshCount();}});
+    if(el.tagName==='TEXTAREA'&&!capped)autogrow(el);});
+  if(s._roster)$('#roster').innerHTML=s._roster;
+  refreshPrompt();refreshCount();
+  if(val('w_tx'))collapse('w_tx','txChip');
+  if(val('w_airesult'))collapse('w_airesult','aiChip');
+})();
+
+/* collapse long boxes */
+function collapse(taId,chipId){const t=$('#'+taId);if(!t.value.trim())return;t.style.display='none';$('#'+chipId).style.display='';}
+function expand(taId,chipId){$('#'+taId).style.display='';$('#'+chipId).style.display='none';$('#'+taId).focus();}
+$('#w_tx').addEventListener('blur',()=>collapse('w_tx','txChip'));
+$('#txChip').onclick=()=>expand('w_tx','txChip');
+$('#w_airesult').addEventListener('blur',()=>collapse('w_airesult','aiChip'));
+$('#aiChip').onclick=()=>expand('w_airesult','aiChip');
+
+/* draw the map */
+try{mermaid.initialize({startOnLoad:false,securityLevel:'loose',theme:'neutral'});}catch(_){}
+function extractMermaid(t){let m=t.match(/```mermaid\s*([\s\S]*?)```/i);if(m)return m[1].trim();m=t.match(/(^|\n)\s*(mindmap[\s\S]+)/i);if(m)return m[2].trim();m=t.match(/(^|\n)\s*(graph\s+(TD|LR|TB)[\s\S]+)/i);if(m)return m[2].trim();return '';}
+$('#drawmap').onclick=async()=>{const code=extractMermaid(val('w_airesult'));const out=$('#mapout'),msg=$('#mapmsg');
+  if(!code){msg.textContent='No map found. Paste the AI answer including its ```mermaid … ``` block, then press Draw the map.';out.style.display='none';return;}
+  msg.textContent='';try{const {svg}=await mermaid.render('mmap_'+Date.now(),code);out.innerHTML=svg;out.style.display='';}
+  catch(e){out.style.display='none';msg.textContent='Could not draw it — ask the AI: “return the map again as a valid Mermaid mindmap”, then paste and retry.';}};
+
+/* copy / print / theme */
+function copy(text,btn){const o=btn.textContent;const ok=()=>{btn.textContent='copied ✓';setTimeout(()=>btn.textContent=o,1200);};
+  const fb=()=>{try{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok();}catch(_){btn.textContent='Ctrl+C';}};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok).catch(fb);}else{fb();}}
+$('#copyprompt').onclick=e=>copy(buildPrompt(),e.currentTarget);
+function syncPrintMirrors(){$('#txPrint').textContent=val('w_tx');$('#aiPrint').textContent=val('w_airesult');}
+window.addEventListener('beforeprint',syncPrintMirrors);
+$('#pdf').onclick=()=>{if(!val('w_date'))$('#w_date').value=new Date().toLocaleDateString();syncPrintMirrors();window.print();};
+$('#clear').onclick=()=>{if(confirm('Clear the worksheet? Download your PDF first if you need it.')){localStorage.removeItem(KEY);location.reload();}};
+const root=document.documentElement;$('#theme').onclick=()=>{const c=root.getAttribute('data-theme');root.setAttribute('data-theme',c==='dark'?'light':c==='light'?'dark':(matchMedia('(prefers-color-scheme:dark)').matches?'light':'dark'));};
+</script>
+</body></html>
