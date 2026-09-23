@@ -125,7 +125,18 @@ pre.prompt{background:#14211b;color:#e8efe6;border-radius:10px;padding:14px;marg
 
 <div class="step" style="--c:var(--c1)">
   <h2><span class="n">1</span> Paste the transcription of your focus group</h2>
-  <p class="lead">Record on a phone, then transcribe it (phone auto-caption, Whisper, or upload the audio to NotebookLM). Paste the transcript — any length; the box collapses to a tidy line so the worksheet stays in view.</p>
+  <p class="lead">Record on a phone, then get a transcript. Transcribe the file <b>here in your browser</b> (no key, private), or use a free tool and paste it. The box collapses to a tidy line so the worksheet stays in view.</p>
+  <div class="how" style="background:var(--panel)">
+    <b>Transcribe a recording (mp4 · m4a · mp3 · wav) — in your browser, no key, nothing uploaded</b>
+    <div class="row" style="margin-top:8px">
+      <input type="file" id="afile" accept="audio/*,video/*" style="font:400 13px Archivo">
+      <select class="txt" id="model" style="width:auto"><option value="Xenova/whisper-tiny">faster (tiny)</option><option value="Xenova/whisper-base">better (base)</option></select>
+      <select class="txt" id="lang" style="width:auto"><option value="auto">auto</option><option value="spanish">ES</option><option value="english">EN</option></select>
+      <button class="btn" id="transcribe">Transcribe</button>
+    </div>
+    <div class="count" id="tstatus" style="color:var(--clay)"></div>
+    <p class="hint" style="color:var(--soft);margin-top:6px">First run downloads the model (~40–150 MB, then cached). A long clip can take a few minutes on a laptop. Prefer a free external tool? <a href="https://www.microsoft.com/microsoft-365/online-word" target="_blank" rel="noopener">Word online</a> (Dictate ▸ Transcribe), <a href="https://notebooklm.google.com" target="_blank" rel="noopener">NotebookLM</a>, or YouTube auto-captions — then paste below.</p>
+  </div>
   <label class="fl" for="w_tx">Focus-group transcript</label>
   <textarea id="w_tx" class="capped" style="height:150px;max-height:260px" placeholder="Paste the transcript. Speaker labels help (M: moderator, P1, P2…) but a rough paste is fine — the AI will sort it."></textarea>
   <div class="chip2" id="txChip" style="display:none"><span>✓ transcript pasted — the worksheet continues below</span><span class="edit">click to view / edit</span></div>
@@ -268,6 +279,50 @@ $('#drawmap').onclick=async()=>{const code=extractMermaid(val('w_airesult'));con
   if(!code){msg.textContent='No map found. Paste the AI answer including its ```mermaid … ``` block, then press Draw the map.';out.style.display='none';return;}
   msg.textContent='';try{const {svg}=await mermaid.render('mmap_'+Date.now(),code);out.innerHTML=svg;out.style.display='';}
   catch(e){out.style.display='none';msg.textContent='Could not draw it — ask the AI: “return the map again as a valid Mermaid mindmap”, then paste and retry.';}};
+
+/* ---- in-browser transcription (Whisper via transformers.js, no key) ---- */
+function tstatus(m){$('#tstatus').textContent=m||'';}
+let _tf=null;
+async function loadTF(){if(!_tf)_tf=await import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2');return _tf;}
+async function decodeAudio(file){
+  const ab=await file.arrayBuffer();
+  const AC=window.AudioContext||window.webkitAudioContext;
+  let ctx; try{ctx=new AC({sampleRate:16000});}catch(_){ctx=new AC();}
+  const buf=await ctx.decodeAudioData(ab);
+  let data;
+  if(buf.numberOfChannels>1){const a=buf.getChannelData(0),b=buf.getChannelData(1);data=new Float32Array(a.length);for(let i=0;i<a.length;i++)data[i]=(a[i]+b[i])/2;}
+  else data=buf.getChannelData(0).slice();
+  if(Math.abs(ctx.sampleRate-16000)>1){ // resample to 16k if needed
+    const ratio=ctx.sampleRate/16000,len=Math.floor(data.length/ratio),out=new Float32Array(len);
+    for(let i=0;i<len;i++)out[i]=data[Math.floor(i*ratio)];
+    data=out;
+  }
+  try{ctx.close();}catch(_){}
+  return data;
+}
+let _busy=false;
+$('#transcribe').onclick=async()=>{
+  if(_busy)return;const f=$('#afile').files[0];
+  if(!f){tstatus('Pick a recording first.');return;}
+  _busy=true;$('#transcribe').disabled=true;
+  try{
+    tstatus('Loading model… (first time downloads it)');
+    const {pipeline}=await loadTF();
+    const asr=await pipeline('automatic-speech-recognition',$('#model').value,{progress_callback:p=>{if(p&&p.status==='progress'&&p.file&&/\.onnx|\.bin/.test(p.file))tstatus('Downloading model '+Math.round(p.progress||0)+'%');}});
+    tstatus('Reading the audio…');
+    const audio=await decodeAudio(f);
+    const mins=(audio.length/16000/60).toFixed(1);
+    tstatus('Transcribing ~'+mins+' min… this can take a few minutes. Keep the tab open.');
+    const lang=$('#lang').value;const opts={chunk_length_s:30,stride_length_s:5};
+    if(lang!=='auto'){opts.language=lang;opts.task='transcribe';}
+    const out=await asr(audio,opts);
+    const txt=((out&&out.text)||'').trim();
+    if(!txt){tstatus('No speech detected — try the ‘better (base)’ model or a clearer clip.');}
+    else{const t=$('#w_tx');t.value=txt;t.dispatchEvent(new Event('input'));tstatus('Done ✓ transcript filled below. Read and clean it up if needed.');}
+  }catch(e){
+    tstatus('Could not transcribe here ('+String(e.message||e).slice(0,60)+'). Use Word online / NotebookLM and paste below.');
+  }finally{_busy=false;$('#transcribe').disabled=false;}
+};
 
 /* copy / print / theme */
 function copy(text,btn){const o=btn.textContent;const ok=()=>{btn.textContent='copied ✓';setTimeout(()=>btn.textContent=o,1200);};
