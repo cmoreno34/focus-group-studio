@@ -339,7 +339,9 @@ $('#aiChip').onclick=()=>expand('w_airesult','aiChip');
 
 /* draw the map */
 try{mermaid.initialize({startOnLoad:false,securityLevel:'loose',theme:'neutral'});}catch(_){}
-function extractMermaid(t){const bl=[...t.matchAll(/```\s*mermaid[^\n]*\n([\s\S]*?)```/gi)].map(x=>x[1].trim()).filter(c=>/^(mindmap|graph|flowchart)\b/i.test(c));if(bl.length)return bl[bl.length-1];let m;m=t.match(/(^|\n)\s*(mindmap[\s\S]+)/i);if(m)return m[2].trim();m=t.match(/(^|\n)\s*(graph\s+(TD|LR|TB)[\s\S]+)/i);if(m)return m[2].trim();return '';}
+function extractMermaid(t){t=t.replace(/\r/g,'');const ok=c=>/^(mindmap|graph|flowchart)\b/i.test(c);
+  const bl=[...t.matchAll(/(^|\n)[ \t]*```[ \t]*mermaid[ \t]*\n([\s\S]*?)\n[ \t]*```/gi)].map(x=>x[2].trim()).filter(ok);if(bl.length)return bl[bl.length-1];
+  const m=t.match(/(^|\n)[ \t]*((mindmap|graph\s+(TD|LR|TB)|flowchart\s+(TD|LR|TB))\b[\s\S]*)/i);return m?m[2].split(/\n[ \t]*```|\n\s*\n(?=\S)/)[0].trim():'';}
 $('#drawmap').onclick=async()=>{const code=extractMermaid(val('w_airesult'));const out=$('#mapout'),msg=$('#mapmsg');
   if(!code){msg.textContent='No map found. If the AI skipped it, reply: “You did not include step 4. Output the thematic map now as a ```mermaid mindmap code block.” Paste that block here and press Draw the map again.';out.style.display='none';return;}
   msg.textContent='';try{const {svg}=await mermaid.render('mmap_'+Date.now(),code);out.innerHTML=svg;out.style.display='';}
