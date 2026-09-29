@@ -339,7 +339,7 @@ $('#aiChip').onclick=()=>expand('w_airesult','aiChip');
 
 /* draw the map */
 try{mermaid.initialize({startOnLoad:false,securityLevel:'loose',theme:'neutral'});}catch(_){}
-function extractMermaid(t){let m=t.match(/```mermaid\s*([\s\S]*?)```/i);if(m)return m[1].trim();m=t.match(/(^|\n)\s*(mindmap[\s\S]+)/i);if(m)return m[2].trim();m=t.match(/(^|\n)\s*(graph\s+(TD|LR|TB)[\s\S]+)/i);if(m)return m[2].trim();return '';}
+function extractMermaid(t){const bl=[...t.matchAll(/```\s*mermaid[^\n]*\n([\s\S]*?)```/gi)].map(x=>x[1].trim()).filter(c=>/^(mindmap|graph|flowchart)\b/i.test(c));if(bl.length)return bl[bl.length-1];let m;m=t.match(/(^|\n)\s*(mindmap[\s\S]+)/i);if(m)return m[2].trim();m=t.match(/(^|\n)\s*(graph\s+(TD|LR|TB)[\s\S]+)/i);if(m)return m[2].trim();return '';}
 $('#drawmap').onclick=async()=>{const code=extractMermaid(val('w_airesult'));const out=$('#mapout'),msg=$('#mapmsg');
   if(!code){msg.textContent='No map found. If the AI skipped it, reply: “You did not include step 4. Output the thematic map now as a ```mermaid mindmap code block.” Paste that block here and press Draw the map again.';out.style.display='none';return;}
   msg.textContent='';try{const {svg}=await mermaid.render('mmap_'+Date.now(),code);out.innerHTML=svg;out.style.display='';}
